@@ -86,9 +86,10 @@ public class DirWalker {
 		final long startTime = System.currentTimeMillis();
 		System.setProperty("java.util.logging.config.file", "./logging.properties");
 		DirWalker fw = new DirWalker();
-		BufferedWriter bWriter = Files.newBufferedWriter(Paths.get("A00421483_Output.csv"));
+		BufferedWriter bw = Files.newBufferedWriter(Paths.get(
+				"C:\\Users\\Dunnyfashion\\Documents\\GitHub\\A00421483_MCDA5510\\Assignment1\\Output\\A00421483_Output.csv"));
 
-		CSVPrinter csvPrinter = new CSVPrinter(bWriter,
+		CSVPrinter csvPrinter = new CSVPrinter(bw,
 				CSVFormat.DEFAULT.withHeader("First Name", "Last Name", "Street Number", "Street", "City", "Province",
 						"Postal Code", "Country", "Phone Number", "Email Address"));
 		fw.walk("C:\\Users\\Dunnyfashion\\Documents\\GitHub\\MCDA5510_Assignments\\Sample Data", csvPrinter);
