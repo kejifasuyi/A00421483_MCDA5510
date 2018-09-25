@@ -1,0 +1,12 @@
+Sep 25, 2018 3:14:46 PM DirWalker walk
+SEVERE: 7
+Sep 25, 2018 3:14:46 PM DirWalker walk
+SEVERE: 1
+Sep 25, 2018 3:14:46 PM DirWalker walk
+SEVERE: 6
+Sep 25, 2018 3:14:55 PM DirWalker main
+INFO: Total Number of skipped rows: 81817
+Sep 25, 2018 3:14:55 PM DirWalker main
+INFO: Total Number of valid rows: 201040
+Sep 25, 2018 3:14:55 PM DirWalker main
+INFO: Total execution time: 11607 ms

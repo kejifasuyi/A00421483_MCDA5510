@@ -1,10 +1,11 @@
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-//import java.io.PrintWriter;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.io.BufferedWriter;
@@ -45,8 +46,8 @@ public class DirWalker {
 						String country = record.get(7);
 						String phNo = record.get(8);
 						String email = record.get(9);
-						String[] output = new String[] { firstName, lastName, stNo, street, city, prov, postCode,
-								country, phNo, email };
+						ArrayList<String> output = new ArrayList<String>(Arrays.asList(firstName, lastName, stNo,
+								street, city, prov, postCode, country, phNo, email));
 
 						if (firstName == null || firstName.equalsIgnoreCase("") || lastName == null
 								|| lastName.equalsIgnoreCase("") || stNo.equalsIgnoreCase("")
