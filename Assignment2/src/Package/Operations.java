@@ -135,24 +135,26 @@ public class Operations {
 			preparedStatement.setInt(1, trxnID);
 
 			ResultSet rs = preparedStatement.executeQuery();
-			if (rs.next()) {
-				rs = preparedStatement.executeQuery();
-				ResultSetMetaData rsmd = rs.getMetaData();
+			 if(rs.next()) {
+				 rs = preparedStatement.executeQuery();
+			ResultSetMetaData rsmd = rs.getMetaData();
 
-				int columnsNumber = rsmd.getColumnCount();
-				while (rs.next()) {
-					for (int i = 1; i <= columnsNumber; i++) {
-						if (i > 1)
-							System.out.print(",  ");
-						String columnValue = rs.getString(i);
-						System.out.print(rsmd.getColumnName(i) + " : " + columnValue);
-					}
-					System.out.println("");
+			int columnsNumber = rsmd.getColumnCount();
+			while (rs.next()) {
+				for (int i = 1; i <= columnsNumber; i++) {
+					if (i > 1)
+						System.out.print(",  ");
+					String columnValue = rs.getString(i);
+					System.out.print(rsmd.getColumnName(i) + " : " + columnValue);
 				}
-			} else {
+				System.out.println("");
+			}
+			 }
+			else {
 				Logger.getLogger("Main").log(Level.INFO, "This row does not exist in the database!");
 			}
-
+			 
+			
 		} catch (SQLException se) {
 			Logger.getLogger("Main").log(Level.WARNING, se.getLocalizedMessage().toString());
 		} catch (Exception e) {
