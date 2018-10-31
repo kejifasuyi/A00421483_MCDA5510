@@ -63,6 +63,8 @@ namespace MSCDA5510
             fileStream.Write(COMMA);
             fileStream.Write("Province");
             fileStream.Write(COMMA);
+            fileStream.Write("Postal Code");
+            fileStream.Write(COMMA);
             fileStream.Write("Country");
             fileStream.WriteLine();
 
@@ -80,10 +82,18 @@ namespace MSCDA5510
                 fileStream.Write(COMMA);
                 fileStream.Write(GeneratePr());
                 fileStream.Write(COMMA);
+                fileStream.Write(GeneratePost());
+                fileStream.Write(COMMA);
                 fileStream.Write("Canada");
                 fileStream.WriteLine();
             }
             fileStream.Close();
+        }
+
+        private string GeneratePost()
+        {
+            String postal = @"C:\Users\Dunnyfashion\Documents\GitHub\A00421483_MCDA5510\ConsoleApp1\ConsoleApp1\PostalCode.txt";
+            return ReturnRandomLine(postal);
         }
 
         private string GeneratePr()
