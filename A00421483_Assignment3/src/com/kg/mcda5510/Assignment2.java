@@ -23,7 +23,6 @@ public class Assignment2 {
 		return single_instance;
 	}
 
-	
 	public static void main(String[] args) {
 		System.setProperty("java.util.logging.config.file", "./logging.properties");
 		Scanner in = new Scanner(System.in);
@@ -37,7 +36,8 @@ public class Assignment2 {
 			int user_input;
 			Transaction t = new Transaction();
 
-			System.out.println("What transaction would you like to perform today?\n1. Create New \n2. Update \n3. Delete \n4. View");
+			System.out.println(
+					"What transaction would you like to perform today?\n1. Create New \n2. Update \n3. Delete \n4. View");
 			user_input = in.nextInt();
 
 			if (user_input == 1) {
@@ -51,8 +51,8 @@ public class Assignment2 {
 
 			else if (user_input == 3) {
 				System.out.println("Enter the ID for the row you want to delete:");
-				int trxnID  = in.nextInt();
-				
+				int trxnID = in.nextInt();
+
 				try {
 					dao.removeTransaction(connection, trxnID);
 				} catch (Exception e) {
@@ -63,10 +63,11 @@ public class Assignment2 {
 
 			else if (user_input == 4) {
 				System.out.println("Enter the ID for the row you want to view:");
-				int trxnID  = in.nextInt();
-				
+				int trxnID = in.nextInt();
+
 				try {
-					dao.getTransaction(connection, trxnID);
+					t = dao.getTransaction(connection, trxnID);
+					System.out.println(t.toString());
 				} catch (Exception e) {
 					Logger.getLogger("Main").log(Level.WARNING, e.getLocalizedMessage().toString());
 					e.printStackTrace();

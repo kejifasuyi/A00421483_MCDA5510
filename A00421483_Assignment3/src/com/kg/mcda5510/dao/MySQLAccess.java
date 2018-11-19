@@ -19,12 +19,10 @@ import java.util.logging.Logger;
 
 import com.kg.mcda5510.entity.Transaction;
 
-
 public class MySQLAccess {
 	private PreparedStatement preparedStatement = null;
 	Scanner in = new Scanner(System.in);
 
-	
 	public Transaction createTrxns() throws Exception {
 
 		Transaction transaction = new Transaction();
@@ -44,8 +42,8 @@ public class MySQLAccess {
 		// Select Card Type
 		System.out.println("Select a Credit Card Type \n1. MasterCard \n2. Visa \n3. American Express");
 		String inputType = in.nextLine();
-		
-		//Enter Card Number
+
+		// Enter Card Number
 		System.out.println("Enter the number on the card");
 		String user_inputCardNum = in.nextLine();
 		String validatedCardNum = validationCheck(user_inputCardNum);
@@ -85,10 +83,9 @@ public class MySQLAccess {
 
 		return transaction;
 	}
-		
 
-	public void createTransaction(Connection connection, Transaction trxn) {
-
+	public boolean createTransaction(Connection connection, Transaction trxn) {
+		boolean success = false;
 		try {
 			preparedStatement = connection
 					.prepareStatement("insert into assignment2.transaction values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
@@ -106,12 +103,13 @@ public class MySQLAccess {
 
 			int status = preparedStatement.executeUpdate();
 
-			
 			if (status > 0) {
 				Logger.getLogger("Main").log(Level.INFO, "This row was created successfully ");
 				System.out.println("Created successfully");
 				getTransaction(connection, trxn.getID());
-				//return true;
+				success = true;
+			} else {
+				success = false;
 			}
 
 		} catch (SQLIntegrityConstraintViolationException e) {
@@ -125,9 +123,11 @@ public class MySQLAccess {
 			Logger.getLogger("Main").log(Level.WARNING, e.getLocalizedMessage().toString());
 			e.printStackTrace();
 		}
+		return success;
 	}
 
-	public void updateTransaction(Connection connect) {
+	public boolean updateTransaction(Connection connect) {
+		boolean success = false;
 		try {
 			System.out.println("Enter the ID for the row you want to edit:");
 			int oldID = in.nextInt();
@@ -152,6 +152,11 @@ public class MySQLAccess {
 				Logger.getLogger("Main").log(Level.INFO, "This row was updated successfully!");
 				System.out.println("Updated successfully");
 				getTransaction(connect, trxn.getID());
+				success = true;
+
+			} else {
+				success = false;
+
 			}
 
 		} catch (SQLException se) {
@@ -159,10 +164,11 @@ public class MySQLAccess {
 		} catch (Exception e) {
 			Logger.getLogger("Main").log(Level.WARNING, e.getLocalizedMessage().toString());
 		}
-
+		return success;
 	}
 
-	public void removeTransaction(Connection connect, int trxnID) {
+	public boolean removeTransaction(Connection connect, int trxnID) {
+		boolean success = false;
 		try {
 			PreparedStatement preparedStatement = null;
 
@@ -174,8 +180,12 @@ public class MySQLAccess {
 			if (status > 0) {
 				Logger.getLogger("Main").log(Level.INFO, "This row was deleted successfully!");
 				System.out.println("Deleted successfully");
+				success = true;
+				return success;
 			} else {
 				Logger.getLogger("Main").log(Level.INFO, "This row does not exist in the database!");
+				success = false;
+				return success;
 			}
 		} catch (SQLException se) {
 			Logger.getLogger("Main").log(Level.WARNING, se.getLocalizedMessage().toString());
@@ -184,10 +194,11 @@ public class MySQLAccess {
 			Logger.getLogger("Main").log(Level.WARNING, e.getLocalizedMessage().toString());
 			e.printStackTrace();
 		}
-
+		return success;
 	}
 
-	public void getTransaction(Connection connect, int trxnID) {
+	public Transaction getTransaction(Connection connect, int trxnID) {
+		Transaction t = new Transaction();
 		try {
 			PreparedStatement preparedStatement = null;
 
@@ -195,26 +206,34 @@ public class MySQLAccess {
 			preparedStatement.setInt(1, trxnID);
 
 			ResultSet rs = preparedStatement.executeQuery();
-			 if(rs.next()) {
-				 rs = preparedStatement.executeQuery();
-			ResultSetMetaData rsmd = rs.getMetaData();
+			if (rs.next()) {
+				rs = preparedStatement.executeQuery();
+				ResultSetMetaData rsmd = rs.getMetaData();
 
-			int columnsNumber = rsmd.getColumnCount();
-			while (rs.next()) {
-				for (int i = 1; i <= columnsNumber; i++) {
-					if (i > 1)
-						System.out.print(",  ");
-					String columnValue = rs.getString(i);
-					System.out.print(rsmd.getColumnName(i) + " : " + columnValue);
+				int columnsNumber = rsmd.getColumnCount();
+				while (rs.next()) {
+					t.setID(rs.getInt("ID"));
+					t.setNameOnCard(rs.getString("NameOnCard"));
+					t.setCardNumber(rs.getString("CardNumber"));
+					t.setCardType(rs.getString("CardType"));
+					t.setUnitPrice(rs.getDouble("UnitPrice"));
+					t.setQty(rs.getInt("Quantity"));
+					t.setTotalPrice(rs.getDouble("TotalPrice"));
+					t.setExpDate(rs.getString("ExpDate"));
+
+					for (int i = 1; i <= columnsNumber; i++) {
+						if (i > 1)
+							System.out.print(",  ");
+						String columnValue = rs.getString(i);
+						System.out.print(rsmd.getColumnName(i) + " : " + columnValue);
+					}
+					System.out.println("");
 				}
-				System.out.println("");
-			}
-			 }
-			else {
+
+			} else {
 				Logger.getLogger("Main").log(Level.INFO, "This row does not exist in the database!");
 			}
-			 
-			
+
 		} catch (SQLException se) {
 			Logger.getLogger("Main").log(Level.WARNING, se.getLocalizedMessage().toString());
 		} catch (Exception e) {
@@ -222,6 +241,7 @@ public class MySQLAccess {
 			Logger.getLogger("Main").log(Level.WARNING, e.getLocalizedMessage().toString());
 			e.printStackTrace();
 		}
+		return t;
 	}
 
 	public String validationCheck(String input) {
