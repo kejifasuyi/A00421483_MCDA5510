@@ -10,6 +10,3 @@ A#: A00421483
 
 Familiarity with .Net, C#, HTML+CSS
 
--I think the assignments may be a little advanced at the beginning of the program while
-getting familiar with a new language. That said, I know I will try my best to learn fast
-and complete the assignments in time. 
