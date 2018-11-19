@@ -1,9 +1,9 @@
 package com.kg.mcda5510;
 
 import java.sql.Connection;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 
 import com.kg.mcda5510.connect.ConnectionFactory;
 import com.kg.mcda5510.connect.MySQLJDBCConnection;
@@ -23,8 +23,10 @@ public class Assignment2 {
 		return single_instance;
 	}
 
+	
 	public static void main(String[] args) {
 		System.setProperty("java.util.logging.config.file", "./logging.properties");
+		Scanner in = new Scanner(System.in);
 		MySQLAccess dao = new MySQLAccess();
 		try {
 			// Connection connection = getInstance();
@@ -35,9 +37,8 @@ public class Assignment2 {
 			int user_input;
 			Transaction t = new Transaction();
 
-			user_input = Integer
-					.valueOf(JOptionPane.showInputDialog("What transaction would you like to perform today?\n"
-							+ "1. Create New \n2. Update \n3. Delete \n4. View"));
+			System.out.println("What transaction would you like to perform today?\n1. Create New \n2. Update \n3. Delete \n4. View");
+			user_input = in.nextInt();
 
 			if (user_input == 1) {
 				t = dao.createTrxns();
@@ -49,8 +50,9 @@ public class Assignment2 {
 			}
 
 			else if (user_input == 3) {
-				int trxnID = Integer
-						.valueOf(JOptionPane.showInputDialog("Enter the ID for the row you want to delete:"));
+				System.out.println("Enter the ID for the row you want to delete:");
+				int trxnID  = in.nextInt();
+				
 				try {
 					dao.removeTransaction(connection, trxnID);
 				} catch (Exception e) {
@@ -60,7 +62,9 @@ public class Assignment2 {
 			}
 
 			else if (user_input == 4) {
-				int trxnID = Integer.valueOf(JOptionPane.showInputDialog("Enter the ID for the row you want to view:"));
+				System.out.println("Enter the ID for the row you want to view:");
+				int trxnID  = in.nextInt();
+				
 				try {
 					dao.getTransaction(connection, trxnID);
 				} catch (Exception e) {
@@ -68,28 +72,17 @@ public class Assignment2 {
 					e.printStackTrace();
 				}
 			} else {
-				JOptionPane.showMessageDialog(null, "Enter a valid request please...");
+				System.out.println("Enter a valid request please...");
 			}
 
-//			Transaction trxns = dao.createTrxns();
-//			//Collection<Transaction> trxns = dao.getAllTransactions(connection);
-//
-//			//for (Transaction trxn : trxns) 
-//			{
-//				trxns.setNameOnCard("New Value");
-//				dao.updateTransaction(connection, trxns);
-//				
-//				System.out.println(trxns.toString());
-//			}
-//
-		if (connection != null) {
+			if (connection != null) {
 				connection.close();
-		}
+			}
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+		in.close();
 	}
 }

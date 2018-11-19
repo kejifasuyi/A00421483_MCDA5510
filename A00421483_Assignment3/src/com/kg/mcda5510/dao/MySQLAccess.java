@@ -12,83 +12,17 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.sql.Statement;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 
 import com.kg.mcda5510.entity.Transaction;
 
 
 public class MySQLAccess {
 	private PreparedStatement preparedStatement = null;
-
-
-//	public Collection<Transaction> getAllTransactions(Connection connection) {
-//		Statement statement = null;
-//		ResultSet resultSet = null;
-//		Collection<Transaction> results = new ArrayList<Transaction>();
-//		// Result set get the result of the SQL query
-//		try {
-//			// Statements allow to issue SQL queries to the database
-//			statement = connection.createStatement();
-//			resultSet = statement.executeQuery("select * from assignment2.transaction");
-//			results = createTransaction(resultSet);
-//
-//			if (resultSet != null) {
-//				resultSet.close();
-//			}
-//
-//			if (statement != null) {
-//				statement.close();
-//			}
-//
-//		} catch (SQLException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} finally {
-//			statement = null;
-//			resultSet = null;
-//		}
-//		return results;
-//
-//	}
-
-//	private Collection<Transaction> createTrxns(ResultSet resultSet) throws SQLException {
-//		Collection<Transaction> results = new ArrayList<Transaction>();
-//
-//		// ResultSet is initially before the first data set
-//		while (resultSet.next()) {
-//			// It is possible to get the columns via name
-//			// also possible to get the columns via the column number
-//			// which starts at 1
-//			// e.g. resultSet.getSTring(2);
-//			Transaction trxn = new Transaction();
-//			trxn.setNameOnCard(resultSet.getString("NameOnCard"));
-//			trxn.setCardNumber(resultSet.getString("CardNumber"));
-//			results.add(trxn);
-//
-//			// TODO
-//			/*
-//			 * String ID = resultSet.getString("ID"); String ExpDate =
-//			 * resultSet.getString("ExpDate"); String UnitPrice =
-//			 * resultSet.getString("UnitPrice"); Integer qty =
-//			 * resultSet.getInt("Quantity"); String totalPrice =
-//			 * resultSet.getString("TotalPrice"); Date createdOn =
-//			 * resultSet.getDate("CreatedOn"); String createdBy =
-//			 * resultSet.getString("CreatedBy");
-//			 */
-//		}
-//		return results;
-//	}
-//	public void updateTransaction(Connection connection,Transaction trxn) {
-//		// DO the update SQL here	
-//	}
-//	private PreparedStatement preparedStatement = null;
-//	Transaction transaction = new Transaction();
+	Scanner in = new Scanner(System.in);
 
 	
 	public Transaction createTrxns() throws Exception {
@@ -96,26 +30,32 @@ public class MySQLAccess {
 		Transaction transaction = new Transaction();
 
 		// Validate the INT ID field
-		String user_inputID = JOptionPane.showInputDialog("Enter a unique ID");
+		System.out.println("Enter a unique ID");
+		String user_inputID = in.nextLine();
 		String validatedID = validateInt(user_inputID);
 		transaction.setID(Integer.valueOf(validatedID));
 
 		// Validate the VARCHAR field
-		String user_inputNameonCard = JOptionPane.showInputDialog("Enter the name on the card");
+		System.out.println("Enter the name on the card");
+		String user_inputNameonCard = in.nextLine();
 		String validatedNameonCard = validationCheck(user_inputNameonCard);
 		transaction.setNameOnCard(validatedNameonCard);
 
 		// Select Card Type
-		String inputType = JOptionPane
-				.showInputDialog("Select a Credit Card Type\n" + "1. MasterCard \n2. Visa \n3. American Express");
-		String user_inputCardNum = JOptionPane.showInputDialog("Enter the number on the card");
+		System.out.println("Select a Credit Card Type \n1. MasterCard \n2. Visa \n3. American Express");
+		String inputType = in.nextLine();
+		
+		//Enter Card Number
+		System.out.println("Enter the number on the card");
+		String user_inputCardNum = in.nextLine();
 		String validatedCardNum = validationCheck(user_inputCardNum);
 		String cardType[] = selectCardType(inputType, validatedCardNum);
 		transaction.setCardType(cardType[0]);
 		transaction.setCardNumber(cardType[1]);
 
 		// Validate the Decimal Field
-		String user_inputPrice = JOptionPane.showInputDialog("Enter Unit price of product");
+		System.out.println("Enter Unit price of product");
+		String user_inputPrice = in.nextLine();
 		String validatedPrice = validatePrice(user_inputPrice);
 		try {
 			transaction.setUnitPrice(Double.parseDouble(validatedPrice));
@@ -124,7 +64,8 @@ public class MySQLAccess {
 		}
 
 		// Validate the INT field
-		String user_inputQty = JOptionPane.showInputDialog("Enter the total number of items");
+		System.out.println("Enter the total number of items");
+		String user_inputQty = in.nextLine();
 		String validatedQty = validateInt(user_inputQty);
 		try {
 			transaction.setQty(Integer.valueOf(validatedQty));
@@ -132,11 +73,12 @@ public class MySQLAccess {
 			Logger.getLogger("Main").log(Level.WARNING, nfe.getLocalizedMessage().toString());
 		}
 
-		// Multiply the unit price by the qty to get the Total price
+		// Multiply the unit price by the quantity to get the Total price
 		transaction.setTotalPrice(transaction.getUnitPrice() * transaction.getQty());
 
 		// Validate the VARCHAR field
-		String user_inputExpDate = JOptionPane.showInputDialog("Enter the Expiry Date \n Format:MM/YYYY");
+		System.out.println("Enter the Expiry Date \\n Format:MM/YYYY");
+		String user_inputExpDate = in.nextLine();
 		String validatedExpDate = validationCheck(user_inputExpDate);
 		String validatedFormat = dateCheck(validatedExpDate);
 		transaction.setExpDate(validatedFormat);
@@ -164,15 +106,18 @@ public class MySQLAccess {
 
 			int status = preparedStatement.executeUpdate();
 
+			
 			if (status > 0) {
 				Logger.getLogger("Main").log(Level.INFO, "This row was created successfully ");
-				JOptionPane.showMessageDialog(null, "Created successfully");
+				System.out.println("Created successfully");
 				getTransaction(connection, trxn.getID());
+				//return true;
 			}
 
 		} catch (SQLIntegrityConstraintViolationException e) {
 			Logger.getLogger("Main").log(Level.WARNING, e.getLocalizedMessage().toString());
-			System.out.println("ID already taken. Try again");
+			System.out.println("ID already taken. Update Instead?");
+			updateTransaction(connection);
 		} catch (SQLException se) {
 			Logger.getLogger("Main").log(Level.WARNING, se.getLocalizedMessage().toString());
 			se.printStackTrace();
@@ -184,8 +129,8 @@ public class MySQLAccess {
 
 	public void updateTransaction(Connection connect) {
 		try {
-
-			int oldID = Integer.valueOf(JOptionPane.showInputDialog("Enter the ID for the row you want to edit:"));
+			System.out.println("Enter the ID for the row you want to edit:");
+			int oldID = in.nextInt();
 			Transaction trxn = createTrxns();
 			preparedStatement = connect.prepareStatement("UPDATE assignment2.transaction SET ID = ?, "
 					+ "NameOnCard = ?, CardNumber = ?, CreditCardType = ?, UnitPrice = ?, Quantity = ?, TotalPrice = ?, ExpDate = ?, CreatedOn = ?, CreatedBy = ? WHERE ID = ?");
@@ -205,7 +150,7 @@ public class MySQLAccess {
 
 			if (status > 0) {
 				Logger.getLogger("Main").log(Level.INFO, "This row was updated successfully!");
-				JOptionPane.showMessageDialog(null, "Updated successfully");
+				System.out.println("Updated successfully");
 				getTransaction(connect, trxn.getID());
 			}
 
@@ -228,7 +173,7 @@ public class MySQLAccess {
 
 			if (status > 0) {
 				Logger.getLogger("Main").log(Level.INFO, "This row was deleted successfully!");
-				JOptionPane.showMessageDialog(null, "Deleted successfully");
+				System.out.println("Deleted successfully");
 			} else {
 				Logger.getLogger("Main").log(Level.INFO, "This row does not exist in the database!");
 			}
@@ -299,14 +244,15 @@ public class MySQLAccess {
 				}
 
 				else {
-					String again = JOptionPane.showInputDialog("Invalid character detected. Try again");
+					System.out.println("Invalid character detected. Try again");
+					String again = in.nextLine();
 					t = 0;
 					validatedStrings = validationCheck(again);
 				}
 			}
 		} else {
-			String again = JOptionPane.showInputDialog("Cannot leave this field empty. Please try again.");
-			t = 0;
+			System.out.println("Cannot leave this field empty. Please try again.");
+			String again = in.nextLine();
 			validatedStrings = validationCheck(again);
 		}
 
@@ -318,7 +264,8 @@ public class MySQLAccess {
 		if (user_inputID != null && user_inputID.matches("\\d+")) {
 			validatedID = user_inputID;
 		} else {
-			String again = JOptionPane.showInputDialog("Not an integer. Please try again. Enter a unique ID");
+			System.out.println("Not an integer. Please try again. Enter a unique ID");
+			String again = in.nextLine();
 			validatedID = validateInt(again);
 		}
 		return validatedID;
@@ -329,7 +276,8 @@ public class MySQLAccess {
 		if (user_inputPrice != null && user_inputPrice.matches("[0-9]+([,.][0-9]{1,2})?")) {
 			validatedPrice = user_inputPrice;
 		} else {
-			String again = JOptionPane.showInputDialog("Invalid character detected. Please try again.");
+			System.out.println("nvalid character detected. Please try again.");
+			String again = in.nextLine();
 			validatedPrice = validatePrice(again);
 		}
 		return validatedPrice;
@@ -346,7 +294,8 @@ public class MySQLAccess {
 				cardType[1] = CardNo;
 
 			} else {
-				String cardNoagain = JOptionPane.showInputDialog("Not a valid Mastercard Number");
+				System.out.println("Not a valid Mastercard Number");
+				String cardNoagain = in.nextLine();
 				cardType = selectCardType(inputType, cardNoagain);
 			}
 			break;
@@ -356,7 +305,8 @@ public class MySQLAccess {
 				cardType[0] = "Visa";
 				cardType[1] = CardNo;
 			} else {
-				String cardNoagain = JOptionPane.showInputDialog("This is not a valid Visa card");
+				System.out.println("This is not a valid Visa card");
+				String cardNoagain = in.nextLine();
 				cardType = selectCardType(inputType, cardNoagain);
 			}
 			break;
@@ -366,13 +316,16 @@ public class MySQLAccess {
 				cardType[0] = "American Express";
 				cardType[1] = CardNo;
 			} else {
-				String cardNoagain = JOptionPane.showInputDialog("Not a valid American ExpressCard.Try again");
+				System.out.println("Not a valid American ExpressCard.Try again");
+				String cardNoagain = in.nextLine();
 				cardType = selectCardType(inputType, cardNoagain);
 			}
 			break;
 		default: {
-			String again = JOptionPane.showInputDialog("Invalid Card Type");
-			String noAgain = JOptionPane.showInputDialog("Card Number");
+			System.out.println("Invalid Card Type");
+			String again = in.nextLine();
+			System.out.println("Card Number");
+			String noAgain = in.nextLine();
 			cardType = selectCardType(again, noAgain);
 		}
 		}
@@ -388,11 +341,13 @@ public class MySQLAccess {
 			if ((yyyy >= 2016 && yyyy <= 2031) && (mm > 0 && mm <= 12)) {
 				validatedDate = mm + "/" + yyyy;
 			} else {
-				String again = JOptionPane.showInputDialog("Invalid Date. Try again");
+				System.out.println("Invalid Date. Try again");
+				String again = in.nextLine();
 				validatedDate = dateCheck(again);
 			}
 		} else {
-			String again = JOptionPane.showInputDialog("Invalid Date. Try again");
+			System.out.println("Invalid Date. Try again");
+			String again = in.nextLine();
 			validatedDate = dateCheck(again);
 		}
 
