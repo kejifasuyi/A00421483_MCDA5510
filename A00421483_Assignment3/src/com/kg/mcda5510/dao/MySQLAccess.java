@@ -1,4 +1,10 @@
-package Package;
+package com.kg.mcda5510.dao;
+
+/**
+ * Original source code from 
+ * http://www.vogella.com/tutorials/MySQLJava/article.html
+ * 
+**/
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,22 +13,81 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Timestamp;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 
-public class Ops {
+import com.kg.mcda5510.entity.Transaction;
 
-	Transaction transaction = new Transaction();
+public class MySQLAccess {
+	private PreparedStatement preparedStatement = null;
+	Scanner in = new Scanner(System.in);
 
-	public void createTransaction(Transaction trxn) {
+	public Transaction createTrxns() throws Exception {
 
+		Transaction transaction = new Transaction();
+
+		// Validate the INT ID field
+		System.out.println("Enter a unique ID");
+		String user_inputID = in.nextLine();
+		String validatedID = validateInt(user_inputID);
+		transaction.setID(Integer.valueOf(validatedID));
+
+		// Validate the VARCHAR field
+		System.out.println("Enter the name on the card");
+		String user_inputNameonCard = in.nextLine();
+		String validatedNameonCard = validationCheck(user_inputNameonCard);
+		transaction.setNameOnCard(validatedNameonCard);
+
+		// Select Card Type
+		System.out.println("Select a Credit Card Type \n1. MasterCard \n2. Visa \n3. American Express");
+		String inputType = in.nextLine();
+
+		// Enter Card Number
+		System.out.println("Enter the number on the card");
+		String user_inputCardNum = in.nextLine();
+		String validatedCardNum = validationCheck(user_inputCardNum);
+		String cardType[] = selectCardType(inputType, validatedCardNum);
+		transaction.setCardType(cardType[0]);
+		transaction.setCardNumber(cardType[1]);
+
+		// Validate the Decimal Field
+		System.out.println("Enter Unit price of product");
+		String user_inputPrice = in.nextLine();
+		String validatedPrice = validatePrice(user_inputPrice);
 		try {
-			MySQLAccess msa = new MySQLAccess();
-			Connection connect = msa.setupConnection();
-			PreparedStatement preparedStatement = null;
+			transaction.setUnitPrice(Double.parseDouble(validatedPrice));
+		} catch (NumberFormatException nfe) {
+			Logger.getLogger("Main").log(Level.WARNING, nfe.getLocalizedMessage().toString());
+		}
 
-			preparedStatement = connect
+		// Validate the INT field
+		System.out.println("Enter the total number of items");
+		String user_inputQty = in.nextLine();
+		String validatedQty = validateInt(user_inputQty);
+		try {
+			transaction.setQty(Integer.valueOf(validatedQty));
+		} catch (NumberFormatException nfe) {
+			Logger.getLogger("Main").log(Level.WARNING, nfe.getLocalizedMessage().toString());
+		}
+
+		// Multiply the unit price by the quantity to get the Total price
+		transaction.setTotalPrice(transaction.getUnitPrice() * transaction.getQty());
+
+		// Validate the VARCHAR field
+		System.out.println("Enter the Expiry Date \\n Format:MM/YYYY");
+		String user_inputExpDate = in.nextLine();
+		String validatedExpDate = validationCheck(user_inputExpDate);
+		String validatedFormat = dateCheck(validatedExpDate);
+		transaction.setExpDate(validatedFormat);
+
+		return transaction;
+	}
+
+	public boolean createTransaction(Connection connection, Transaction trxn) {
+		boolean success = false;
+		try {
+			preparedStatement = connection
 					.prepareStatement("insert into assignment2.transaction values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
 			preparedStatement.setInt(1, trxn.getID());
@@ -40,14 +105,17 @@ public class Ops {
 
 			if (status > 0) {
 				Logger.getLogger("Main").log(Level.INFO, "This row was created successfully ");
-				JOptionPane.showMessageDialog(null, "Created successfully");
-				Ops ops = new Ops();
-				ops.getTransaction(trxn.getID());
+				System.out.println("Created successfully");
+				getTransaction(connection, trxn.getID());
+				success = true;
+			} else {
+				success = false;
 			}
 
 		} catch (SQLIntegrityConstraintViolationException e) {
 			Logger.getLogger("Main").log(Level.WARNING, e.getLocalizedMessage().toString());
-			System.out.println("ID already taken. Try again");
+			System.out.println("ID already taken. Update Instead?");
+			updateTransaction(connection);
 		} catch (SQLException se) {
 			Logger.getLogger("Main").log(Level.WARNING, se.getLocalizedMessage().toString());
 			se.printStackTrace();
@@ -55,17 +123,15 @@ public class Ops {
 			Logger.getLogger("Main").log(Level.WARNING, e.getLocalizedMessage().toString());
 			e.printStackTrace();
 		}
+		return success;
 	}
 
-	public void updateTransaction(Transaction trxn) {
+	public boolean updateTransaction(Connection connect) {
+		boolean success = false;
 		try {
-			MySQLAccess msa = new MySQLAccess();
-			Operations operations = new Operations();
-			Connection connect = msa.setupConnection();
-			PreparedStatement preparedStatement = null;
-
-			int oldID = Integer.valueOf(JOptionPane.showInputDialog("Enter the ID for the row you want to edit:"));
-			trxn = operations.makeTransaction();
+			System.out.println("Enter the ID for the row you want to edit:");
+			int oldID = in.nextInt();
+			Transaction trxn = createTrxns();
 			preparedStatement = connect.prepareStatement("UPDATE assignment2.transaction SET ID = ?, "
 					+ "NameOnCard = ?, CardNumber = ?, CreditCardType = ?, UnitPrice = ?, Quantity = ?, TotalPrice = ?, ExpDate = ?, CreatedOn = ?, CreatedBy = ? WHERE ID = ?");
 			preparedStatement.setInt(1, trxn.getID());
@@ -84,23 +150,26 @@ public class Ops {
 
 			if (status > 0) {
 				Logger.getLogger("Main").log(Level.INFO, "This row was updated successfully!");
-				JOptionPane.showMessageDialog(null, "Updated successfully");
-				Ops ops = new Ops();
-				ops.getTransaction(trxn.getID());
-			} 
+				System.out.println("Updated successfully");
+				getTransaction(connect, trxn.getID());
+				success = true;
+
+			} else {
+				success = false;
+
+			}
 
 		} catch (SQLException se) {
 			Logger.getLogger("Main").log(Level.WARNING, se.getLocalizedMessage().toString());
 		} catch (Exception e) {
 			Logger.getLogger("Main").log(Level.WARNING, e.getLocalizedMessage().toString());
 		}
-
+		return success;
 	}
 
-	public void removeTransaction(int trxnID) {
+	public boolean removeTransaction(Connection connect, int trxnID) {
+		boolean success = false;
 		try {
-			MySQLAccess msa = new MySQLAccess();
-			Connection connect = msa.setupConnection();
 			PreparedStatement preparedStatement = null;
 
 			preparedStatement = connect.prepareStatement("DELETE FROM assignment2.transaction WHERE ID = ?");
@@ -110,10 +179,13 @@ public class Ops {
 
 			if (status > 0) {
 				Logger.getLogger("Main").log(Level.INFO, "This row was deleted successfully!");
-				JOptionPane.showMessageDialog(null, "Deleted successfully");
-			}
-			else {
+				System.out.println("Deleted successfully");
+				success = true;
+				return success;
+			} else {
 				Logger.getLogger("Main").log(Level.INFO, "This row does not exist in the database!");
+				success = false;
+				return success;
 			}
 		} catch (SQLException se) {
 			Logger.getLogger("Main").log(Level.WARNING, se.getLocalizedMessage().toString());
@@ -122,39 +194,54 @@ public class Ops {
 			Logger.getLogger("Main").log(Level.WARNING, e.getLocalizedMessage().toString());
 			e.printStackTrace();
 		}
-
+		return success;
 	}
 
-	public void getTransaction(int trxnID) {
-		MySQLAccess msa = new MySQLAccess();
-		Connection connect;
+	public Transaction getTransaction(Connection connect, int trxnID) {
+		Transaction t = new Transaction();
 		try {
-			connect = msa.setupConnection();
 			PreparedStatement preparedStatement = null;
 
 			preparedStatement = connect.prepareStatement("SELECT * FROM assignment2.transaction WHERE ID = ?");
 			preparedStatement.setInt(1, trxnID);
 
 			ResultSet rs = preparedStatement.executeQuery();
-			ResultSetMetaData rsmd = rs.getMetaData();
+			if (rs.next()) {
+				rs = preparedStatement.executeQuery();
+				ResultSetMetaData rsmd = rs.getMetaData();
 
-			int columnsNumber = rsmd.getColumnCount();
-			while (rs.next()) {
-				for (int i = 1; i <= columnsNumber; i++) {
-					if (i > 1)
-						System.out.print(",  ");
-					String columnValue = rs.getString(i);
-					System.out.print(rsmd.getColumnName(i) + " : " + columnValue);
+				int columnsNumber = rsmd.getColumnCount();
+				while (rs.next()) {
+					t.setID(rs.getInt("ID"));
+					t.setNameOnCard(rs.getString("NameOnCard"));
+					t.setCardNumber(rs.getString("CardNumber"));
+					t.setCardType(rs.getString("CardType"));
+					t.setUnitPrice(rs.getDouble("UnitPrice"));
+					t.setQty(rs.getInt("Quantity"));
+					t.setTotalPrice(rs.getDouble("TotalPrice"));
+					t.setExpDate(rs.getString("ExpDate"));
+
+					for (int i = 1; i <= columnsNumber; i++) {
+						if (i > 1)
+							System.out.print(",  ");
+						String columnValue = rs.getString(i);
+						System.out.print(rsmd.getColumnName(i) + " : " + columnValue);
+					}
+					System.out.println("");
 				}
-				System.out.println("");
+
+			} else {
+				Logger.getLogger("Main").log(Level.INFO, "This row does not exist in the database!");
 			}
+
 		} catch (SQLException se) {
 			Logger.getLogger("Main").log(Level.WARNING, se.getLocalizedMessage().toString());
 		} catch (Exception e) {
 			System.out.println("This does not exist in the database");
 			Logger.getLogger("Main").log(Level.WARNING, e.getLocalizedMessage().toString());
 			e.printStackTrace();
-		} 
+		}
+		return t;
 	}
 
 	public String validationCheck(String input) {
@@ -177,14 +264,15 @@ public class Ops {
 				}
 
 				else {
-					String again = JOptionPane.showInputDialog("Invalid character detected. Try again");
+					System.out.println("Invalid character detected. Try again");
+					String again = in.nextLine();
 					t = 0;
 					validatedStrings = validationCheck(again);
 				}
 			}
 		} else {
-			String again = JOptionPane.showInputDialog("Cannot leave this field empty. Please try again.");
-			t = 0;
+			System.out.println("Cannot leave this field empty. Please try again.");
+			String again = in.nextLine();
 			validatedStrings = validationCheck(again);
 		}
 
@@ -196,7 +284,8 @@ public class Ops {
 		if (user_inputID != null && user_inputID.matches("\\d+")) {
 			validatedID = user_inputID;
 		} else {
-			String again = JOptionPane.showInputDialog("Not an integer. Please try again. Enter a unique ID");
+			System.out.println("Not an integer. Please try again. Enter a unique ID");
+			String again = in.nextLine();
 			validatedID = validateInt(again);
 		}
 		return validatedID;
@@ -207,7 +296,8 @@ public class Ops {
 		if (user_inputPrice != null && user_inputPrice.matches("[0-9]+([,.][0-9]{1,2})?")) {
 			validatedPrice = user_inputPrice;
 		} else {
-			String again = JOptionPane.showInputDialog("Invalid character detected. Please try again.");
+			System.out.println("nvalid character detected. Please try again.");
+			String again = in.nextLine();
 			validatedPrice = validatePrice(again);
 		}
 		return validatedPrice;
@@ -224,7 +314,8 @@ public class Ops {
 				cardType[1] = CardNo;
 
 			} else {
-				String cardNoagain = JOptionPane.showInputDialog("Not a valid Mastercard Number");
+				System.out.println("Not a valid Mastercard Number");
+				String cardNoagain = in.nextLine();
 				cardType = selectCardType(inputType, cardNoagain);
 			}
 			break;
@@ -234,7 +325,8 @@ public class Ops {
 				cardType[0] = "Visa";
 				cardType[1] = CardNo;
 			} else {
-				String cardNoagain = JOptionPane.showInputDialog("This is not a valid Visa card");
+				System.out.println("This is not a valid Visa card");
+				String cardNoagain = in.nextLine();
 				cardType = selectCardType(inputType, cardNoagain);
 			}
 			break;
@@ -244,12 +336,18 @@ public class Ops {
 				cardType[0] = "American Express";
 				cardType[1] = CardNo;
 			} else {
-				String cardNoagain = JOptionPane.showInputDialog("Not a valid American ExpressCard.Try again");
+				System.out.println("Not a valid American ExpressCard.Try again");
+				String cardNoagain = in.nextLine();
 				cardType = selectCardType(inputType, cardNoagain);
 			}
 			break;
-		default:
+		default: {
 			System.out.println("Invalid Card Type");
+			String again = in.nextLine();
+			System.out.println("Card Number");
+			String noAgain = in.nextLine();
+			cardType = selectCardType(again, noAgain);
+		}
 		}
 		return cardType;
 	}
@@ -263,11 +361,13 @@ public class Ops {
 			if ((yyyy >= 2016 && yyyy <= 2031) && (mm > 0 && mm <= 12)) {
 				validatedDate = mm + "/" + yyyy;
 			} else {
-				String again = JOptionPane.showInputDialog("Invalid Date. Try again");
+				System.out.println("Invalid Date. Try again");
+				String again = in.nextLine();
 				validatedDate = dateCheck(again);
 			}
 		} else {
-			String again = JOptionPane.showInputDialog("Invalid Date. Try again");
+			System.out.println("Invalid Date. Try again");
+			String again = in.nextLine();
 			validatedDate = dateCheck(again);
 		}
 
