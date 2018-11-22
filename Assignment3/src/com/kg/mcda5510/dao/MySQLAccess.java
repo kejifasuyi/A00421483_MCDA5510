@@ -31,38 +31,28 @@ public class MySQLAccess {
 	}
 
 	
-	public Transaction createTrxns() throws Exception {
+	public Transaction createTrxns(String id, String Name, String CardType, String CardNumber, 
+			 String unitPrice, String qty, String expDate) throws Exception {
 
 		Transaction transaction = new Transaction();
 
 		// Validate the INT ID field
-		System.out.println("Enter a unique ID");
-		String user_inputID = in.nextLine();
-		String validatedID = validateInt(user_inputID);
+		String validatedID = validateInt(id);
 		transaction.setID(Integer.valueOf(validatedID));
 
 		// Validate the VARCHAR field
-		System.out.println("Enter the name on the card");
-		String user_inputNameonCard = in.nextLine();
-		String validatedNameonCard = validationCheck(user_inputNameonCard);
+		String validatedNameonCard = validationCheck(Name);
 		transaction.setNameOnCard(validatedNameonCard);
 
-		// Select Card Type
-		System.out.println("Select a Credit Card Type \n1. MasterCard \n2. Visa \n3. American Express");
-		String inputType = in.nextLine();
 
-		// Enter Card Number
-		System.out.println("Enter the number on the card");
-		String user_inputCardNum = in.nextLine();
-		String validatedCardNum = validationCheck(user_inputCardNum);
-		String cardType[] = selectCardType(inputType, validatedCardNum);
+		// Enter Card Number & CardType
+		String validatedCardNum = validationCheck(CardNumber);
+		String cardType[] = selectCardType(CardType, validatedCardNum);
 		transaction.setCardType(cardType[0]);
 		transaction.setCardNumber(cardType[1]);
 
 		// Validate the Decimal Field
-		System.out.println("Enter Unit price of product");
-		String user_inputPrice = in.nextLine();
-		String validatedPrice = validatePrice(user_inputPrice);
+		String validatedPrice = validatePrice(unitPrice);
 		try {
 			transaction.setUnitPrice(Double.parseDouble(validatedPrice));
 		} catch (NumberFormatException nfe) {
@@ -70,9 +60,7 @@ public class MySQLAccess {
 		}
 
 		// Validate the INT field
-		System.out.println("Enter the total number of items");
-		String user_inputQty = in.nextLine();
-		String validatedQty = validateInt(user_inputQty);
+		String validatedQty = validateInt(qty);
 		try {
 			transaction.setQty(Integer.valueOf(validatedQty));
 		} catch (NumberFormatException nfe) {
@@ -83,9 +71,7 @@ public class MySQLAccess {
 		transaction.setTotalPrice(transaction.getUnitPrice() * transaction.getQty());
 
 		// Validate the VARCHAR field
-		System.out.println("Enter the Expiry Date \\n Format:MM/YYYY");
-		String user_inputExpDate = in.nextLine();
-		String validatedExpDate = validationCheck(user_inputExpDate);
+		String validatedExpDate = validationCheck(expDate);
 		String validatedFormat = dateCheck(validatedExpDate);
 		transaction.setExpDate(validatedFormat);
 
@@ -317,7 +303,7 @@ public class MySQLAccess {
 		String cardType[] = new String[2];
 
 		switch (inputType) {
-		case "1":
+		case "Mastercard":
 			if ((CardNo.startsWith("51") || CardNo.startsWith("52") || CardNo.startsWith("53")
 					|| CardNo.startsWith("54") || CardNo.startsWith("55")) && CardNo.length() == 16) {
 				cardType[0] = "MasterCard";
@@ -330,7 +316,7 @@ public class MySQLAccess {
 			}
 			break;
 
-		case "2":
+		case "Visa":
 			if (CardNo.startsWith("4") && CardNo.length() == 16) {
 				cardType[0] = "Visa";
 				cardType[1] = CardNo;
@@ -341,7 +327,7 @@ public class MySQLAccess {
 			}
 			break;
 
-		case "3":
+		case "American Express":
 			if ((CardNo.startsWith("34") || CardNo.startsWith("37")) && CardNo.length() == 15) {
 				cardType[0] = "American Express";
 				cardType[1] = CardNo;

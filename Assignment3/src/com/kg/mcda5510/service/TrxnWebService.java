@@ -10,11 +10,10 @@ public class TrxnWebService {
 	private static Transaction trxn;
 	
 		
-	public boolean createTransaction(int id, String Name, String CardType, String CardNumber, 
-			 double unitPrice, int qty, String expDate) {
+	public boolean createTransaction(String id, String Name, String CardType, String CardNumber, 
+			 String unitPrice, String qty, String expDate) {
 		try {
-		
-			trxn = dao.createTrxns();
+			trxn = dao.createTrxns(id, Name, CardType, CardNumber, unitPrice, qty, expDate);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -22,11 +21,11 @@ public class TrxnWebService {
 		return dao.createTransaction(trxn);
 	}
 	
-	public boolean updateTransaction(int oldid, int id, String Name, String CardType, String CardNumber, 
-			 double unitPrice, int qty, String expDate) {	
+	public boolean updateTransaction(int oldid, String id, String Name, String CardType, String CardNumber, 
+			 String unitPrice, String qty, String expDate) {	
 		try {
 			
-			trxn = dao.createTrxns();
+			trxn = dao.createTrxns(id, Name, CardType, CardNumber, unitPrice, qty, expDate);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

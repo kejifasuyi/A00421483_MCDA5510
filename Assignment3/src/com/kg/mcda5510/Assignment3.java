@@ -14,7 +14,6 @@ public class Assignment3 {
 		Scanner in = new Scanner(System.in);
 		MySQLAccess dao = new MySQLAccess();
 		try {
-
 			int user_input;
 			Transaction t = new Transaction();
 
@@ -23,14 +22,14 @@ public class Assignment3 {
 			user_input = in.nextInt();
 
 			if (user_input == 1) {
-				t = dao.createTrxns();
+				//t = dao.createTrxns();
 				dao.createTransaction(t);
 			}
 
 			else if (user_input == 2) {
 				System.out.println("Enter the ID for the row you want to edit:");
 				int oldID = in.nextInt();
-				 t = dao.createTrxns();
+				// t = dao.createTrxns();
 				dao.updateTransaction(t, oldID);
 			}
 

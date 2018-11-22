@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<wsdl:definitions targetNamespace="http://service.mcda5510.kg.com" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://service.mcda5510.kg.com" xmlns:intf="http://service.mcda5510.kg.com" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<wsdl:definitions targetNamespace="http://service.mcda5510.kg.com" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://service.mcda5510.kg.com" xmlns:intf="http://service.mcda5510.kg.com" xmlns:tns1="http://entity.mcda5510.kg.com" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 <!--WSDL created by Apache Axis version: 1.4
 Built on Apr 22, 2006 (06:55:48 PDT)-->
  <wsdl:types>
   <schema elementFormDefault="qualified" targetNamespace="http://service.mcda5510.kg.com" xmlns="http://www.w3.org/2001/XMLSchema">
+   <import namespace="http://entity.mcda5510.kg.com"/>
    <element name="getTransaction">
     <complexType>
      <sequence>
@@ -12,40 +13,52 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
     </complexType>
    </element>
    <element name="getTransactionResponse">
-    <complexType/>
+    <complexType>
+     <sequence>
+      <element name="getTransactionReturn" type="tns1:Transaction"/>
+     </sequence>
+    </complexType>
    </element>
    <element name="createTransaction">
     <complexType>
      <sequence>
-      <element name="id" type="xsd:int"/>
+      <element name="id" type="xsd:string"/>
       <element name="Name" type="xsd:string"/>
       <element name="CardType" type="xsd:string"/>
       <element name="CardNumber" type="xsd:string"/>
-      <element name="unitPrice" type="xsd:double"/>
-      <element name="qty" type="xsd:int"/>
+      <element name="unitPrice" type="xsd:string"/>
+      <element name="qty" type="xsd:string"/>
       <element name="expDate" type="xsd:string"/>
      </sequence>
     </complexType>
    </element>
    <element name="createTransactionResponse">
-    <complexType/>
+    <complexType>
+     <sequence>
+      <element name="createTransactionReturn" type="xsd:boolean"/>
+     </sequence>
+    </complexType>
    </element>
    <element name="updateTransaction">
     <complexType>
      <sequence>
       <element name="oldid" type="xsd:int"/>
-      <element name="id" type="xsd:int"/>
+      <element name="id" type="xsd:string"/>
       <element name="Name" type="xsd:string"/>
       <element name="CardType" type="xsd:string"/>
       <element name="CardNumber" type="xsd:string"/>
-      <element name="unitPrice" type="xsd:double"/>
-      <element name="qty" type="xsd:int"/>
+      <element name="unitPrice" type="xsd:string"/>
+      <element name="qty" type="xsd:string"/>
       <element name="expDate" type="xsd:string"/>
      </sequence>
     </complexType>
    </element>
    <element name="updateTransactionResponse">
-    <complexType/>
+    <complexType>
+     <sequence>
+      <element name="updateTransactionReturn" type="xsd:boolean"/>
+     </sequence>
+    </complexType>
    </element>
    <element name="removeTransaction">
     <complexType>
@@ -55,8 +68,27 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
     </complexType>
    </element>
    <element name="removeTransactionResponse">
-    <complexType/>
+    <complexType>
+     <sequence>
+      <element name="removeTransactionReturn" type="xsd:boolean"/>
+     </sequence>
+    </complexType>
    </element>
+  </schema>
+  <schema elementFormDefault="qualified" targetNamespace="http://entity.mcda5510.kg.com" xmlns="http://www.w3.org/2001/XMLSchema">
+   <complexType name="Transaction">
+    <sequence>
+     <element name="ID" type="xsd:int"/>
+     <element name="cardNumber" nillable="true" type="xsd:string"/>
+     <element name="cardType" nillable="true" type="xsd:string"/>
+     <element name="createdOn" nillable="true" type="xsd:dateTime"/>
+     <element name="expDate" nillable="true" type="xsd:string"/>
+     <element name="nameOnCard" nillable="true" type="xsd:string"/>
+     <element name="qty" type="xsd:int"/>
+     <element name="totalPrice" type="xsd:double"/>
+     <element name="unitPrice" type="xsd:double"/>
+    </sequence>
+   </complexType>
   </schema>
  </wsdl:types>
 

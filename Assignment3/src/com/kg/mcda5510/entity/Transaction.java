@@ -2,7 +2,7 @@ package com.kg.mcda5510.entity;
 
 import java.util.Date;
 
-public class Transaction{
+public class Transaction {
 
 	private int ID;
 	private String nameOnCard;
@@ -85,18 +85,16 @@ public class Transaction{
 	public void setCardType(String cardType) {
 		this.cardType = cardType;
 	}
-	
-	public String toString(){
-		
+
+	public String toString() {
+
 		String results = new String();
-		
-		results = "[ID: " + ID + "NameOnCard: " + nameOnCard +", CardNumber: " + cardNumber+", CardType: "
-				+ cardType + ", Unit Price: " + unitPrice + ", Quantity: " + qty + ", Total Price: "
-				+ totalPrice + ", ExpDate: " + expDate + ", Created On: " + createdOn + "]";
+
+		results = "[ID: " + ID + "NameOnCard: " + nameOnCard + ", CardNumber: " + cardNumber + ", CardType: " + cardType
+				+ ", Unit Price: " + unitPrice + ", Quantity: " + qty + ", Total Price: " + totalPrice + ", ExpDate: "
+				+ expDate + ", Created On: " + createdOn + "]";
 		return results;
 
 	}
 
-	
-	
 }

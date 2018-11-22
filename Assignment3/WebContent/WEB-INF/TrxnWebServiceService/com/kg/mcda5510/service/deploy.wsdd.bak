@@ -15,37 +15,45 @@
   <service name="TrxnWebService" provider="java:RPC" style="wrapped" use="literal">
       <parameter name="wsdlTargetNamespace" value="http://service.mcda5510.kg.com"/>
       <parameter name="wsdlServiceElement" value="TrxnWebServiceService"/>
-      <parameter name="schemaQualified" value="http://service.mcda5510.kg.com"/>
+      <parameter name="schemaQualified" value="http://entity.mcda5510.kg.com,http://service.mcda5510.kg.com"/>
       <parameter name="wsdlServicePort" value="TrxnWebService"/>
       <parameter name="className" value="com.kg.mcda5510.service.TrxnWebServiceSoapBindingImpl"/>
       <parameter name="wsdlPortType" value="TrxnWebService"/>
       <parameter name="typeMappingVersion" value="1.2"/>
-      <operation name="getTransaction" qname="operNS:getTransaction" xmlns:operNS="http://service.mcda5510.kg.com" soapAction="" >
+      <operation name="getTransaction" qname="operNS:getTransaction" xmlns:operNS="http://service.mcda5510.kg.com" returnQName="retNS:getTransactionReturn" xmlns:retNS="http://service.mcda5510.kg.com" returnType="rtns:Transaction" xmlns:rtns="http://entity.mcda5510.kg.com" soapAction="" >
         <parameter qname="pns:trxnID" xmlns:pns="http://service.mcda5510.kg.com" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
       </operation>
-      <operation name="createTransaction" qname="operNS:createTransaction" xmlns:operNS="http://service.mcda5510.kg.com" soapAction="" >
-        <parameter qname="pns:id" xmlns:pns="http://service.mcda5510.kg.com" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      <operation name="createTransaction" qname="operNS:createTransaction" xmlns:operNS="http://service.mcda5510.kg.com" returnQName="retNS:createTransactionReturn" xmlns:retNS="http://service.mcda5510.kg.com" returnType="rtns:boolean" xmlns:rtns="http://www.w3.org/2001/XMLSchema" soapAction="" >
+        <parameter qname="pns:id" xmlns:pns="http://service.mcda5510.kg.com" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
         <parameter qname="pns:Name" xmlns:pns="http://service.mcda5510.kg.com" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
         <parameter qname="pns:CardType" xmlns:pns="http://service.mcda5510.kg.com" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
         <parameter qname="pns:CardNumber" xmlns:pns="http://service.mcda5510.kg.com" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
-        <parameter qname="pns:unitPrice" xmlns:pns="http://service.mcda5510.kg.com" type="tns:double" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
-        <parameter qname="pns:qty" xmlns:pns="http://service.mcda5510.kg.com" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="pns:unitPrice" xmlns:pns="http://service.mcda5510.kg.com" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="pns:qty" xmlns:pns="http://service.mcda5510.kg.com" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
         <parameter qname="pns:expDate" xmlns:pns="http://service.mcda5510.kg.com" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
       </operation>
-      <operation name="updateTransaction" qname="operNS:updateTransaction" xmlns:operNS="http://service.mcda5510.kg.com" soapAction="" >
+      <operation name="updateTransaction" qname="operNS:updateTransaction" xmlns:operNS="http://service.mcda5510.kg.com" returnQName="retNS:updateTransactionReturn" xmlns:retNS="http://service.mcda5510.kg.com" returnType="rtns:boolean" xmlns:rtns="http://www.w3.org/2001/XMLSchema" soapAction="" >
         <parameter qname="pns:oldid" xmlns:pns="http://service.mcda5510.kg.com" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
-        <parameter qname="pns:id" xmlns:pns="http://service.mcda5510.kg.com" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="pns:id" xmlns:pns="http://service.mcda5510.kg.com" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
         <parameter qname="pns:Name" xmlns:pns="http://service.mcda5510.kg.com" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
         <parameter qname="pns:CardType" xmlns:pns="http://service.mcda5510.kg.com" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
         <parameter qname="pns:CardNumber" xmlns:pns="http://service.mcda5510.kg.com" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
-        <parameter qname="pns:unitPrice" xmlns:pns="http://service.mcda5510.kg.com" type="tns:double" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
-        <parameter qname="pns:qty" xmlns:pns="http://service.mcda5510.kg.com" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="pns:unitPrice" xmlns:pns="http://service.mcda5510.kg.com" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="pns:qty" xmlns:pns="http://service.mcda5510.kg.com" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
         <parameter qname="pns:expDate" xmlns:pns="http://service.mcda5510.kg.com" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
       </operation>
-      <operation name="removeTransaction" qname="operNS:removeTransaction" xmlns:operNS="http://service.mcda5510.kg.com" soapAction="" >
+      <operation name="removeTransaction" qname="operNS:removeTransaction" xmlns:operNS="http://service.mcda5510.kg.com" returnQName="retNS:removeTransactionReturn" xmlns:retNS="http://service.mcda5510.kg.com" returnType="rtns:boolean" xmlns:rtns="http://www.w3.org/2001/XMLSchema" soapAction="" >
         <parameter qname="pns:trxnID" xmlns:pns="http://service.mcda5510.kg.com" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
       </operation>
       <parameter name="allowedMethods" value="updateTransaction removeTransaction createTransaction getTransaction"/>
 
+      <typeMapping
+        xmlns:ns="http://entity.mcda5510.kg.com"
+        qname="ns:Transaction"
+        type="java:com.kg.mcda5510.entity.Transaction"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
   </service>
 </deployment>

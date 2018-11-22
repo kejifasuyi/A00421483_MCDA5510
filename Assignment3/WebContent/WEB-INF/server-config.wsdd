@@ -7,8 +7,8 @@
   <ns1:parameter name="dotNetSoapEncFix" value="true"/>
   <ns1:parameter name="enableNamespacePrefixOptimization" value="false"/>
   <ns1:parameter name="sendXMLDeclaration" value="true"/>
-  <ns1:parameter name="sendXsiTypes" value="true"/>
   <ns1:parameter name="attachments.implementation" value="org.apache.axis.attachments.AttachmentsImpl"/>
+  <ns1:parameter name="sendXsiTypes" value="true"/>
   <ns1:requestFlow>
    <ns1:handler type="java:org.apache.axis.handlers.JWSHandler">
     <ns1:parameter name="scope" value="session"/>
@@ -33,39 +33,40 @@
   <ns1:parameter name="className" value="org.apache.axis.Version"/>
  </ns1:service>
  <ns1:service name="TrxnWebService" provider="java:RPC" style="wrapped" use="literal">
-  <ns2:operation name="getTransaction" qname="ns1:getTransaction" soapAction="" xmlns:ns1="http://service.mcda5510.kg.com" xmlns:ns2="http://xml.apache.org/axis/wsdd/">
-   <ns2:parameter qname="ns1:trxnID" type="xsd:int" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
-  </ns2:operation>
-  <ns1:operation name="createTransaction" qname="ns2:createTransaction" soapAction="" xmlns:ns2="http://service.mcda5510.kg.com">
-   <ns1:parameter qname="ns2:id" type="xsd:int" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
-   <ns1:parameter qname="ns2:Name" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
-   <ns1:parameter qname="ns2:CardType" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
-   <ns1:parameter qname="ns2:CardNumber" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
-   <ns1:parameter qname="ns2:unitPrice" type="xsd:double" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
-   <ns1:parameter qname="ns2:qty" type="xsd:int" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
-   <ns1:parameter qname="ns2:expDate" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
+  <ns3:operation name="getTransaction" qname="ns1:getTransaction" returnQName="ns1:getTransactionReturn" returnType="ns2:Transaction" soapAction="" xmlns:ns1="http://service.mcda5510.kg.com" xmlns:ns2="http://entity.mcda5510.kg.com" xmlns:ns3="http://xml.apache.org/axis/wsdd/">
+   <ns3:parameter qname="ns1:trxnID" type="xsd:int" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
+  </ns3:operation>
+  <ns1:operation name="createTransaction" qname="ns3:createTransaction" returnQName="ns3:createTransactionReturn" returnType="xsd:boolean" soapAction="" xmlns:ns3="http://service.mcda5510.kg.com" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <ns1:parameter qname="ns3:id" type="xsd:string"/>
+   <ns1:parameter qname="ns3:Name" type="xsd:string"/>
+   <ns1:parameter qname="ns3:CardType" type="xsd:string"/>
+   <ns1:parameter qname="ns3:CardNumber" type="xsd:string"/>
+   <ns1:parameter qname="ns3:unitPrice" type="xsd:string"/>
+   <ns1:parameter qname="ns3:qty" type="xsd:string"/>
+   <ns1:parameter qname="ns3:expDate" type="xsd:string"/>
   </ns1:operation>
-  <ns1:operation name="updateTransaction" qname="ns3:updateTransaction" soapAction="" xmlns:ns3="http://service.mcda5510.kg.com">
-   <ns1:parameter qname="ns3:oldid" type="xsd:int" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
-   <ns1:parameter qname="ns3:id" type="xsd:int" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
-   <ns1:parameter qname="ns3:Name" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
-   <ns1:parameter qname="ns3:CardType" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
-   <ns1:parameter qname="ns3:CardNumber" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
-   <ns1:parameter qname="ns3:unitPrice" type="xsd:double" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
-   <ns1:parameter qname="ns3:qty" type="xsd:int" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
-   <ns1:parameter qname="ns3:expDate" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
+  <ns1:operation name="updateTransaction" qname="ns4:updateTransaction" returnQName="ns4:updateTransactionReturn" returnType="xsd:boolean" soapAction="" xmlns:ns4="http://service.mcda5510.kg.com" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <ns1:parameter qname="ns4:oldid" type="xsd:int"/>
+   <ns1:parameter qname="ns4:id" type="xsd:string"/>
+   <ns1:parameter qname="ns4:Name" type="xsd:string"/>
+   <ns1:parameter qname="ns4:CardType" type="xsd:string"/>
+   <ns1:parameter qname="ns4:CardNumber" type="xsd:string"/>
+   <ns1:parameter qname="ns4:unitPrice" type="xsd:string"/>
+   <ns1:parameter qname="ns4:qty" type="xsd:string"/>
+   <ns1:parameter qname="ns4:expDate" type="xsd:string"/>
   </ns1:operation>
-  <ns1:operation name="removeTransaction" qname="ns4:removeTransaction" soapAction="" xmlns:ns4="http://service.mcda5510.kg.com">
-   <ns1:parameter qname="ns4:trxnID" type="xsd:int" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
+  <ns1:operation name="removeTransaction" qname="ns5:removeTransaction" returnQName="ns5:removeTransactionReturn" returnType="xsd:boolean" soapAction="" xmlns:ns5="http://service.mcda5510.kg.com" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <ns1:parameter qname="ns5:trxnID" type="xsd:int"/>
   </ns1:operation>
   <ns1:parameter name="allowedMethods" value="updateTransaction removeTransaction createTransaction getTransaction"/>
   <ns1:parameter name="typeMappingVersion" value="1.2"/>
   <ns1:parameter name="wsdlPortType" value="TrxnWebService"/>
   <ns1:parameter name="className" value="com.kg.mcda5510.service.TrxnWebService"/>
   <ns1:parameter name="wsdlServicePort" value="TrxnWebService"/>
-  <ns1:parameter name="schemaQualified" value="http://service.mcda5510.kg.com"/>
+  <ns1:parameter name="schemaQualified" value="http://entity.mcda5510.kg.com,http://service.mcda5510.kg.com"/>
   <ns1:parameter name="wsdlTargetNamespace" value="http://service.mcda5510.kg.com"/>
   <ns1:parameter name="wsdlServiceElement" value="TrxnWebServiceService"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns6:Transaction" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:com.kg.mcda5510.entity.Transaction" xmlns:ns6="http://entity.mcda5510.kg.com"/>
  </ns1:service>
  <ns1:transport name="http">
   <ns1:requestFlow>

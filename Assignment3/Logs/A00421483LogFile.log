@@ -1,2 +1,2 @@
-Nov 22, 2018 2:04:31 AM com.kg.mcda5510.dao.MySQLAccess getTransaction
-INFO: This row does not exist in the database!
+Nov 22, 2018 9:38:29 AM com.kg.mcda5510.dao.MySQLAccess removeTransaction
+INFO: This row was deleted successfully!
