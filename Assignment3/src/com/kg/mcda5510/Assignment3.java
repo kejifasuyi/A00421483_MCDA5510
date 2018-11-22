@@ -8,7 +8,6 @@ import com.kg.mcda5510.entity.Transaction;
 
 public class Assignment3 {
 
-
 	public static void main(String[] args) {
 		System.setProperty("java.util.logging.config.file", "./logging.properties");
 		Scanner in = new Scanner(System.in);
@@ -22,7 +21,7 @@ public class Assignment3 {
 			user_input = in.nextInt();
 
 			if (user_input == 1) {
-				//t = dao.createTrxns();
+				// t = dao.createTrxns();
 				dao.createTransaction(t);
 			}
 
@@ -50,7 +49,7 @@ public class Assignment3 {
 				int trxnID = in.nextInt();
 
 				try {
-					t = dao.getTransaction(trxnID);
+					String to = dao.getTransaction(trxnID);
 					System.out.println(t.toString());
 				} catch (Exception e) {
 					Logger.getLogger("Main").log(Level.WARNING, e.getLocalizedMessage().toString());
@@ -60,7 +59,6 @@ public class Assignment3 {
 				System.out.println("Enter a valid request please...");
 			}
 
-		
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
