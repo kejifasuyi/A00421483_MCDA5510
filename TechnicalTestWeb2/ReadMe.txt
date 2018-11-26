@@ -37,6 +37,8 @@ Make the name label for the Customer on the shipment object say "Customer Name" 
 
 Please Answer:
 What was required to fix?
+Add annotation [Display(Name = "Customer Name")] to the firstName field in Customer.cs
+
 
 Item 5:
 There is a bug in the code.
@@ -44,6 +46,8 @@ The estimated ship date must be at least 24 hours after the Date Ordered.  Fix
 
 Please Answer:
 What was wrong and what was required to fix?
+I added the function add days to make the compare function compare, the shipdate and a day after and then say it cant be sooner if it is lesser than a day after. 
+int result = DateTime.Compare(estShipDate, orderPlacedDate.AddDays(1));
 
 Item 6:
 When Editing customer Nitin, the province appear as Quebec.  Not Ontario - the default for create.

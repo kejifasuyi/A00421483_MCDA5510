@@ -19,7 +19,7 @@ namespace TechnicalTestWeb2
             DateTime estShipDate = (DateTime)value;
             DateTime orderPlacedDate = (DateTime)shipment.DateOrderPlaced;
 
-            int result = DateTime.Compare(estShipDate, orderPlacedDate);
+            int result = DateTime.Compare(estShipDate, orderPlacedDate.AddDays(1));
 
             if (result > 0)
             {

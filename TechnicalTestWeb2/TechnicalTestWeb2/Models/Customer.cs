@@ -19,7 +19,7 @@ namespace TechnicalTestWeb2.Models
 
         public int ID { get; set; }
 
-        [Display(Name = "First Name")]
+        [Display(Name = "Customer Name")]
         [StringLength(64)]
         public string firstName { get; set; }
 

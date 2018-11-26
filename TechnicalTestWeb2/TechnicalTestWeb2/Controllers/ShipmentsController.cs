@@ -91,6 +91,7 @@ namespace TechnicalTestWeb2.Controllers
                 return RedirectToAction("Index");
             }
             ViewBag.CustomerID = new SelectList(db.Customers, "ID", "firstName", shipment.CustomerID);
+            
             return View(shipment);
         }
 
